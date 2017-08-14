@@ -1,34 +1,45 @@
-#import system.
-#import system'routines.
-#import system'io.
-#import system'collections.
-#import extensions.
-#import extensions'routines.
+import system'routines.
+import system'calendar.
+import system'io.
+import system'collections.
+import extensions.
+import extensions'routines.
 
-#class(extension) op
+extension op
 {
-     #method normalized
-         = self toArray ascendant summarize:(String new) literal.
+     normalized
+         = self toArray; ascendant; summarize:(String new); literal.
 }
 
-#symbol program =
+symbol program =
 [
-    #var aDictionary := Dictionary new.
+    var aStart := now.
 
-    "unixdict.txt" file_path run &eachLine: aWord
+    var aDictionary := Dictionary new.
+
+    "unixdict.txt" file_path; run eachLine: (:aWord)
     [
-        #var aKey := aWord normalized.
-        #var anItem := aDictionary@aKey.
-        ($nil == anItem) ?
+        var s := aWord.
+        var aKey := aWord normalized.
+        var anItem := aDictionary@aKey.
+        if ($nil == anItem)
         [
             anItem := ArrayList new.
             aDictionary@aKey := anItem.
         ].
 
-        anItem += aWord.
+        anItem append:aWord.
     ].
 
-    aDictionary array_list
-        sort: (:aFormer:aLater) [ aFormer length > aLater length ]
-        top:20 run &each: aPair [ console writeLine:aPair ].
+    aDictionary array_list;
+        sort: (:aFormer:aLater)[ ^aFormer length > aLater length ];
+        top:20; run each: (:aPair)[ console writeLine:aPair ].
+
+    var anEnd := now.
+
+    var aDiff := anEnd - aStart.
+
+    console writeLine:"Time elapsed in msec:":(aDiff milliseconds).
+
+    console readChar.
 ].

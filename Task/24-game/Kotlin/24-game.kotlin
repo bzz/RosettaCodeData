@@ -1,5 +1,3 @@
-package game24
-
 import java.util.*
 
 internal object Game24 {

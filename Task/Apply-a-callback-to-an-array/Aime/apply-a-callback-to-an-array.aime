@@ -22,14 +22,7 @@ out(object o)
 integer
 main(void)
 {
-    list l;
-
-    l_append(l, 0);
-    l_append(l, 1);
-    l_append(l, 2);
-    l_append(l, 3);
-
-    map(l, out);
+    map(l_effect(0, 1, 2, 3), out);
 
     return 0;
 }

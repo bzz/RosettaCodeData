@@ -6,7 +6,6 @@ big=2**47;                   NTlimit=16+1        /*limit for a non─terminating
 numeric digits max(9, 1+length(big))             /*be able to handle big numbers for // */
 #.=.;  #.0=0;  #.1=0                             /*#.   are the proper divisor sums.    */
 say center('numbers from '     low     " to "     high, 79, "═")
-
          do n=low  to high                       /*process (probably) some low numbers. */
          call classify  n                        /*call a subroutine to classify number.*/
          end   /*n*/                             /* [↑]   process a range of integers.  */
@@ -16,11 +15,10 @@ class.=0                                         /* [↓]  ensure one number of 
          do q=1  until class.sociable\==0        /*the only one that has to be counted. */
          call classify  -q                       /*the minus (-) sign indicates ¬ tell. */
          _=what;   upper _;    class._=class._+1 /*bump counter for this class sequence.*/
-         if class._==1  then call show_class q,$ /*only display the first occurrence.   */
-         end   /*q*/                             /* [↑]  process until all classes found*/
-say
+         if class._==1  then say right(q,digits())   'is'   center(what,15) $
+         end   /*q*/                             /* [↑]  only display the 1st occurrence*/
+say                                              /* [↑]  process until all classes found*/
 say center('classifications for specific numbers', 79, "═")
-
          do i=1  for words(L)                    /*L:   is a list of  "special numbers".*/
          call classify  word(L,i)                /*call a subroutine to classify number.*/
          end   /*i*/                             /* [↑]  process a list of integers.    */
@@ -47,17 +45,14 @@ classify: parse arg a 1 aa;  a=abs(a)            /*obtain number that's to be cl
                        if t>NTlimit     then do;   what='non-terminating';   leave;    end
                        if s>big         then do;   what='NON-TERMINATING';   leave;    end
                        end   /*t*/               /* [↑]  only permit within reason.     */
-          if aa>0  then call show_class a,$      /*only display if   A   is positive.   */
-          return
-/*──────────────────────────────────────────────────────────────────────────────────────*/
-show_class:  say right(arg(1),digits())   'is'   center(what,15) arg(2);    return
+          if aa>0  then say right(a, digits())     'is'      center(what, 15)   $
+          return                                 /* [↑] only display if  A  is positive.*/
 /*──────────────────────────────────────────────────────────────────────────────────────*/
 sigma: procedure expose #.;  parse arg x;     if x<2  then return 0;        odd=x//2
        s=1                                       /* [↓]  use only EVEN | ODD ints.   ___*/
             do j=2+odd  by 1+odd  while j*j<x    /*divide by all the integers up to √ X */
             if x//j==0  then  s=s + j + x%j      /*add the two divisors to the sum.     */
-            end   /*j*/                          /* [↑]  %  is the REXX integer division*/
-                                                 /* [↓]  adjust for square.          ___*/
+            end   /*j*/                          /* [↓]  adjust for square.          ___*/
        if j*j==x  then  s=s+j                    /*Was  X  a square?    If so, add  √ X */
        #.x=s                                     /*define  divison sum  for argument  X.*/
        return s                                  /*return     "     "    "      "     " */
